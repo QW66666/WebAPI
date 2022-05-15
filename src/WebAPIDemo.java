@@ -32,8 +32,8 @@ public class WebAPIDemo {
 
         String urlDetails = "https://api.themoviedb.org/3/movie/" + movieID + "?api_key=" + APIkey + "&language=en-US";
         MovieDetails[] list = new MovieDetails[1];
-        parseJSONDetails(urlDetails, list);
-        System.out.println(list[0].getName() + list[0].getOrigLang() + list[0].getOrigCountry());
+        parseJSONDetails(makeAPICall(urlDetails), list);
+        System.out.println("Production Company: " + list[0].getName() + "\n" + "Original Language: " + list[0].getOrigLang() + "\n" + "Original Country: " + list[0].getOrigCountry());
 
 
     }
@@ -60,13 +60,11 @@ public class WebAPIDemo {
 
     private static void parseJSONDetails(String json, MovieDetails[] list){
         JSONObject jsonObj = new JSONObject(json);
-        JSONArray prodComp = new JSONArray("production_companies");
-        JSONArray genre = new JSONArray("genres");
-        JSONArray prodCount = new JSONArray("production_countries");
+        JSONArray prodComp = jsonObj.getJSONArray("production_companies");
+        JSONArray prodCount = jsonObj.getJSONArray("production_countries");
         String name = prodComp.getJSONObject(0).getString("name");
-        String origCountry =prodCount.getJSONObject(0).getString("origin_country");
-        String origLang = genre.getJSONObject(0).getString("original_language");
-
+        String origCountry = prodCount.getJSONObject(0).getString("name");
+        String origLang = jsonObj.getString("original_language");
         MovieDetails detail = new MovieDetails(name, origLang, origCountry);
         list[0] = detail;
     }
